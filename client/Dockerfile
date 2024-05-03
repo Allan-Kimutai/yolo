@@ -35,7 +35,10 @@ COPY --from=build /app/client/build ./build
 COPY --from=build /app/client/package.json /app/client/package-lock.json ./
 
 
+# Install the serve package globally to serve the static build files. The -g flag installs the package globally, making it available as a command-line tool
 RUN npm install -g serve
+
+
 # Expose the port the app runs on
 EXPOSE 3000
 
