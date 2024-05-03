@@ -1,4 +1,4 @@
-# Use the official Node.js 14 image as a base for the build stage
+# Use the official Node.js 16 image as a base for the build stage
 FROM node:16-alpine as build
 
 

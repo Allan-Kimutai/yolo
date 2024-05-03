@@ -1,5 +1,5 @@
-# Use the official Node.js 14 image as a base for the build stage
-FROM node:14 as build
+# Use the official Node.js 16 image as a base for the build stage
+FROM node:16 as build
 
 
 # Set the working directory inside the container
@@ -19,7 +19,7 @@ COPY . .
 
 
 # Use a lightweight Node.js image for the production stage
-FROM node:14-alpine
+FROM node:16-alpine
 
 
 # Set the working directory inside the container

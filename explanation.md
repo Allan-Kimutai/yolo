@@ -1,8 +1,8 @@
 # Docker Setup and Deployment Documentation
 ## 1. Choice of Base Images:
 ### Backend Container:
-Base Image: node:14-alpine
-Reasoning: The node:14-alpine image was selected for its lightweight nature, which is ideal for running Node.js applications. The Alpine variant reduces image size, resulting in faster build times and smaller final image sizes. Additionally, Node.js 14 ensures compatibility with the backend's runtime environment and required packages.
+Base Image: node:16-alpine
+Reasoning: The node:16-alpine image was selected for its lightweight nature, which is ideal for running Node.js applications. The Alpine variant reduces image size, resulting in faster build times and smaller final image sizes. Additionally, Node.js 14 ensures compatibility with the backend's runtime environment and required packages.
         
 ### Client Container:
 Base Image: node:16-alpine
@@ -14,49 +14,68 @@ Directives Used: FROM, WORKDIR, COPY, RUN, EXPOSE, CMD
 Explanation: These directives configure the backend container environment, set the working directory, copy application files, install dependencies, expose the required port, and define the command to start the backend server.
 
 Specify the base image for the build stage.
-"FROM node:14-alpine"
+ 'FROM node:14-alpine'
 
 Set the working directory inside the container for subsequent instructions.
-"WORKDIR /app/backend"
+ 'WORKDIR /app/backend'
 
 Copy the package.json and package-lock.json files from the host to the container's working directory
-"COPY package*.json ./"
+ 'COPY package*.json ./'
 
 Install dependencies defined in the package.json file using npm.
-"RUN npm install"
+ 'RUN npm install'
 
 Expose port 5000 to allow external communication with the backend application.
-"EXPOSE 5000"
+ 'EXPOSE 5000'
 
 Define the command to start the backend server using npm start.
-"CMD ["npm", "start"]"
+ 'CMD ["npm", "start"]'
 
 ### Client Container:
 Directives Used: FROM, WORKDIR, COPY, RUN, EXPOSE, CMD
 Explanation: These directives are used to configure the frontend container environment, set the working directory, copy application files, install dependencies, build the React app, expose the required port, and define the command to serve the built application.
 
 Pull the official Node.js 16 Alpine image for building the frontend.
-"FROM node:16-alpine"
+ 'FROM node:16-alpine as build'
 
 Set the working directory inside the container for subsequent instructions.
-"WORKDIR /app/client"
+ 'WORKDIR /app/client'
 
 Copy the package.json and package-lock.json files from the host to the container's working directory.
-"COPY package*.json ./"
+ 'COPY package*.json ./'
 
 Install dependencies defined in the package.json file using npm.
-"RUN npm install"
+ 'RUN npm install'
+ 
+Copy the rest of the application code
+ 'COPY . .'
+
+Build the React app
+ 'RUN npm run build'
+
+Use a lightweight Node.js image for the production stage
+ 'FROM node:16-alpine'
+
+Set the working directory inside the container
+ 'WORKDIR /app/client'
+
+Copy the build output from the build stage and the package*.json file
+ 'COPY --from=build /app/client/build ./build'
+ 'COPY --from=build /app/client/package.json /app/client/package-lock.json ./'
+
+Install the serve package globally to serve the static build files. The -g flag installs the package globally, making it available as a command-line tool
+'RUN npm install -g serve'
 
 Install dependencies defined in the package.json file using npm.
-"EXPOSE 3000"
+ 'EXPOSE 3000'
 
 Install dependencies defined in the package.json file using npm.
-"CMD ["serve","-s","build"]"
+ 'CMD ["serve","-s","build"]'
 
 ## 3. Docker-compose Networking:
 ### Ports Exposed:
 Frontend: Port 3000
-Backend: Port 5000
+ Backend: Port 5000
 
 ### Bridge Network Implementation: 
 In the docker-compose.yml file, I defined a custom bridge network named "yolo-network" under the networks section. This network is configured with the bridge driver, which is the default driver for Docker Compose networks. By specifying this network for our services (frontend, backend, and mongo), they are all connected within the same network, allowing seamless communication
