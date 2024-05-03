@@ -95,6 +95,6 @@ Tagging Convention: Followed semantic versioning for Docker image tags (version.
 
 ## 8. Screenshot of Deployed Image on DockerHub:
 
-![client/Screenshots](image.png)
+![client/Screenshots/Screenshot from 2024-05-04 01-34-22.png](<client/Screenshots/Screenshot from 2024-05-04 01-34-22.png>)
 
-![client/Screenshots](image-1.png)
+![client/Screenshots/Screenshot from 2024-05-04 01-41-49.png](<client/Screenshots/Screenshot from 2024-05-04 01-41-49.png>)
