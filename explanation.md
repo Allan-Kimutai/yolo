@@ -13,68 +13,68 @@ Reasoning: For the frontend container, we chose the node:16-alpine image to leve
 Directives Used: FROM, WORKDIR, COPY, RUN, EXPOSE, CMD
 Explanation: These directives configure the backend container environment, set the working directory, copy application files, install dependencies, expose the required port, and define the command to start the backend server.
 
-Specify the base image for the build stage.
+Specify the base image for the build stage.<br />
  'FROM node:14-alpine'
 
-Set the working directory inside the container for subsequent instructions.
+Set the working directory inside the container for subsequent instructions.<br />
  'WORKDIR /app/backend'
 
-Copy the package.json and package-lock.json files from the host to the container's working directory
+Copy the package.json and package-lock.json files from the host to the container's working directory<br />
  'COPY package*.json ./'
 
-Install dependencies defined in the package.json file using npm.
+Install dependencies defined in the package.json file using npm.<br />
  'RUN npm install'
 
-Expose port 5000 to allow external communication with the backend application.
+Expose port 5000 to allow external communication with the backend application.<br />
  'EXPOSE 5000'
 
-Define the command to start the backend server using npm start.
+Define the command to start the backend server using npm start.<br />
  'CMD ["npm", "start"]'
 
 ### Client Container:
 Directives Used: FROM, WORKDIR, COPY, RUN, EXPOSE, CMD
 Explanation: These directives are used to configure the frontend container environment, set the working directory, copy application files, install dependencies, build the React app, expose the required port, and define the command to serve the built application.
 
-Pull the official Node.js 16 Alpine image for building the frontend.
+Pull the official Node.js 16 Alpine image for building the frontend.<br />
  'FROM node:16-alpine as build'
 
-Set the working directory inside the container for subsequent instructions.
+Set the working directory inside the container for subsequent instructions.<br />
  'WORKDIR /app/client'
 
-Copy the package.json and package-lock.json files from the host to the container's working directory.
+Copy the package.json and package-lock.json files from the host to the container's working directory.<br />
  'COPY package*.json ./'
 
-Install dependencies defined in the package.json file using npm.
+Install dependencies defined in the package.json file using npm.<br />
  'RUN npm install'
  
-Copy the rest of the application code
+Copy the rest of the application code.<br />
  'COPY . .'
 
-Build the React app
+Build the React app<br />
  'RUN npm run build'
 
-Use a lightweight Node.js image for the production stage
+Use a lightweight Node.js image for the production stage<br />
  'FROM node:16-alpine'
 
-Set the working directory inside the container
+Set the working directory inside the container<br />
  'WORKDIR /app/client'
 
-Copy the build output from the build stage and the package*.json file
+Copy the build output from the build stage and the package*.json file.<br />
  'COPY --from=build /app/client/build ./build'
  'COPY --from=build /app/client/package.json /app/client/package-lock.json ./'
 
-Install the serve package globally to serve the static build files. The -g flag installs the package globally, making it available as a command-line tool
+Install the serve package globally to serve the static build files. The -g flag installs the package globally, making it available as a command-line tool<br />
 'RUN npm install -g serve'
 
-Install dependencies defined in the package.json file using npm.
+Install dependencies defined in the package.json file using npm.<br />
  'EXPOSE 3000'
 
-Install dependencies defined in the package.json file using npm.
+Install dependencies defined in the package.json file using npm.<br />
  'CMD ["serve","-s","build"]'
 
 ## 3. Docker-compose Networking:
 ### Ports Exposed:
-Frontend: Port 3000
+Frontend: Port 3000<br />
  Backend: Port 5000
 
 ### Bridge Network Implementation: 
@@ -94,6 +94,7 @@ Debugging Measures: Monitored container logs, inspected network configurations, 
 Tagging Convention: Followed semantic versioning for Docker image tags (version.major.minor). Additionally, included relevant metadata such as commit hash or build number for identification.
 
 ## 8. Screenshot of Deployed Image on DockerHub:
-![alt text](image.png)
 
-![alt text](image-1.png)
+![alt text](dockerhub-image.png)
+
+![alt text](images.png)
