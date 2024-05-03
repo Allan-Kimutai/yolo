@@ -2,7 +2,7 @@
 ## 1. Choice of Base Images:
 ### Backend Container:
 Base Image: node:16-alpine
-Reasoning: The node:16-alpine image was selected for its lightweight nature, which is ideal for running Node.js applications. The Alpine variant reduces image size, resulting in faster build times and smaller final image sizes. Additionally, Node.js 14 ensures compatibility with the backend's runtime environment and required packages.
+Reasoning: The node:16-alpine image was selected for its lightweight nature, which is ideal for running Node.js applications. The Alpine variant reduces image size, resulting in faster build times and smaller final image sizes. Additionally, Node.js 16 ensures compatibility with the backend's runtime environment and required packages.
         
 ### Client Container:
 Base Image: node:16-alpine
