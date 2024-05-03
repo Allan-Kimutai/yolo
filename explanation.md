@@ -94,7 +94,12 @@ Debugging Measures: Monitored container logs, inspected network configurations, 
 Tagging Convention: Followed semantic versioning for Docker image tags (version.major.minor). Additionally, included relevant metadata such as commit hash or build number for identification.
 
 ## 8. Screenshot of Deployed Image on DockerHub:
-
+The below is the deployed images on DockerHub
 ![client/Screenshots/Screenshot from 2024-05-04 01-34-22.png](<client/Screenshots/Screenshot from 2024-05-04 01-34-22.png>)
 
+![client/Screenshots/Screenshot from 2024-05-04 02-39-44.png](<client/Screenshots/Screenshot from 2024-05-04 02-39-44.png>)
+
+![client/Screenshots/Screenshot from 2024-05-04 02-45-23.png](<client/Screenshots/Screenshot from 2024-05-04 02-45-23.png>)
+
+The below is the list of related Docker images for this project on the local system showing the tags & size of the images
 ![client/Screenshots/Screenshot from 2024-05-04 01-41-49.png](<client/Screenshots/Screenshot from 2024-05-04 01-41-49.png>)
