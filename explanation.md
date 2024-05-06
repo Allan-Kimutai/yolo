@@ -103,3 +103,4 @@ The below is the deployed images on DockerHub
 
 The below is the list of related Docker images for this project on the local system showing the tags & size of the images
 ![client/Screenshots/Screenshot from 2024-05-04 01-41-49.png](<client/Screenshots/Screenshot from 2024-05-04 01-41-49.png>)
+![client/Screenshots/Screenshot from 2024-05-06 11-39-58.png](<client/Screenshots/Screenshot from 2024-05-06 11-39-58.png>)
