@@ -14,7 +14,7 @@ Directives Used: FROM, WORKDIR, COPY, RUN, EXPOSE, CMD
 Explanation: These directives configure the backend container environment, set the working directory, copy application files, install dependencies, expose the required port, and define the command to start the backend server.
 
 Specify the base image for the build stage.<br />
- ```FROM node:14-alpine```
+ ```FROM node:16-alpine```
 
 Set the working directory inside the container for subsequent instructions.<br />
  ```WORKDIR /app/backend```
@@ -63,13 +63,13 @@ Copy the build output from the build stage and the package*.json file.<br />
  ```COPY --from=build /app/client/build ./build```<br />
  ```COPY --from=build /app/client/package.json /app/client/package-lock.json ./```
 
-Install the serve package globally to serve the static build files. The -g flag installs the package globally, making it available as a command-line tool<br />
+Install the serve package to serve the static build files. The -g flag installs the package globally making it available as a command-line tool<br />
 ```RUN npm install -g serve```
 
-Install dependencies defined in the package.json file using npm.<br />
+Expose port 3000 that the app runs on.<br />
  ```EXPOSE 3000```
 
-Install dependencies defined in the package.json file using npm.<br />
+Define the command to run the built React app using the serve package.<br />
  ```CMD ["serve","-s","build"]```
 
 ## 3. Docker-compose Networking:
