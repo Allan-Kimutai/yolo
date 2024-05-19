@@ -1,0 +1,14 @@
+- name: Setup and deploy e-commerce application
+  hosts: all
+  become: yes
+  vars_files:
+    - group_vars/all.yml
+
+  roles:
+    - test-connectivity
+    - update-server
+    - setup-docker
+    - clone-repository
+    - setup-mongo-db
+    - setup-backend
+    - setup-front-end
