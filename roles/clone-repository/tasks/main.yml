@@ -2,8 +2,7 @@
 # tasks file for clone-repository
 - name: Clone the repository
   git:
-    repo: '{{ repository_url }}'
-    dest: '{{ repository_dest }}'
-    version: '{{ repository_version }}'
+    repo: 'git@github.com:Allan-Kimutai/yolo.git'
+    dest: '/home/vagrant/yolo'
+    version: 'main'
   become: yes
-  become_user: "{{ ansible_user }}"
