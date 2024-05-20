@@ -1,2 +1,5 @@
 ---
-# tasks file for test-connectivity
+# tasks/main.yml
+
+- name: Test connectivity to the host
+  ping:
