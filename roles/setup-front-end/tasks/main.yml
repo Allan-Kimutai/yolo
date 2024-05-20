@@ -1,57 +1,18 @@
 ---
-# tasks file for setup-front-end
----
 # tasks file for setup-frontend
 
-- name: Ensure Node.js is installed
-  apt:
-    name: nodejs
-    state: present
+- name: Pull frontend Docker image
+  docker_image:
+    name: allankimutai/client:v1.0.0
+    source: pull
   become: yes
 
-- name: Ensure npm is installed
-  apt:
-    name: npm
-    state: present
-  become: yes
-
-- name: Copy frontend source code to target
-  copy:
-    src: /home/{{ ansible_user }}/yolo/client/
-    dest: /app/client/
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0755'
-  become: yes
-
-- name: Install frontend dependencies
-  command: npm install
-  args:
-    chdir: /app/client
-  become: yes
-
-- name: Build frontend application
-  command: npm run build
-  args:
-    chdir: /app/client
-  become: yes
-
-- name: Install serve globally
-  npm:
-    name: serve
-    global: yes
-  become: yes
-
-- name: Start frontend service with serve
-  shell: serve -s build -l 3000 &
-  args:
-    chdir: /app/client
-  become: yes
-
-- name: Ensure frontend service is running
-  command: pgrep -f "serve -s build -l 3000"
-  register: frontend_service
-  retries: 5
-  delay: 2
-  until: frontend_service.rc == 0
+- name: Run frontend container
+  docker_container:
+    name: frontend
+    image: allankimutai/client:v1.0.0
+    state: started
+    restart_policy: always
+    ports:
+      - "3000:3000"
   become: yes
