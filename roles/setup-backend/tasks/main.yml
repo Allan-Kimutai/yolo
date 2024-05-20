@@ -1,2 +1,52 @@
 ---
 # tasks file for setup-backend
+- name: Ensure Node.js is installed
+  apt:
+    name: nodejs
+    state: present
+  become: yes
+
+- name: Ensure npm is installed
+  apt:
+    name: npm
+    state: present
+  become: yes
+
+- name: Install pm2 globally
+  npm:
+    name: pm2
+    global: yes
+  become: yes
+
+- name: Copy backend source code to target
+  copy:
+    src: /home/{{ ansible_user }}/yolo/backend
+    dest: /app/backend
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  become: yes
+
+- name: Install backend dependencies
+  command: npm install
+  args:
+    chdir: /app/backend
+  become: yes
+
+- name: Start backend service with pm2
+  command: pm2 start /app/backend/app.js --name backend
+  become: yes
+
+- name: Ensure pm2 startup script is generated
+  command: pm2 startup systemd
+  become: yes
+
+- name: Save pm2 process list
+  command: pm2 save
+  become: yes
+
+- name: Ensure pm2 is enabled at boot
+  systemd:
+    name: pm2-root
+    enabled: yes
+    state: started
+  become: yes

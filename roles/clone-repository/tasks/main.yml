@@ -1,0 +1,9 @@
+---
+# tasks file for clone-repository
+- name: Clone the repository
+  git:
+    repo: '{{ repository_url }}'
+    dest: '{{ repository_dest }}'
+    version: '{{ repository_version }}'
+  become: yes
+  become_user: "{{ ansible_user }}"
