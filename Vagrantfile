@@ -67,6 +67,15 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+   # Frontend port forwarding
+   config.vm.network "forwarded_port", guest: 3000, host: 3000
+
+   # Backend port forwarding
+   config.vm.network "forwarded_port", guest: 8000, host: 8000
+ 
+   # MongoDB port forwarding
+   config.vm.network "forwarded_port", guest: 27017, host: 27017
+   
   config.ssh.insert_key = false
 
   config.vm.provision "ansible" do |ansible|

@@ -2,7 +2,7 @@
 # tasks file for clone-repository
 - name: Clone the repository
   git:
-    repo: 'git@github.com:Allan-Kimutai/yolo.git'
+    repo: 'https://github.com/Allan-Kimutai/yolo'
     dest: '/home/vagrant/yolo'
-    version: 'main'
-  become: yes
+    version: 'master'
+

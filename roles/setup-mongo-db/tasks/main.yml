@@ -1,5 +1,9 @@
 ---
 # tasks file for setup-mongo-db
+- name: Create Docker network
+  community.docker.docker_network:
+    name: yolo-network
+    state: present
 
 - name: Run MongoDB Docker container
   docker_container:
