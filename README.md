@@ -161,7 +161,7 @@ kubectl get pods -n yolo
 kubectl get svc -n yolo
 ```
 ## Accessing the Application
-- Access the application externally via the IP address [35.195.61.146](http://35.195.61.146).
+- Access the application externally via the IP address [http://104.155.79.2](http://104.155.79.2).
 
 ## Features
 
