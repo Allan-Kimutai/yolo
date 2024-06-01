@@ -16,99 +16,152 @@ Make sure that you have the following installed:
 
 1. **Clone the repository:**
 
-    ```sh
-    git@github.com:Allan-Kimutai/yolo.git
-    ```
+```bash
+git clone git@github.com:Allan-Kimutai/yolo.git
+```
 
 2. **Navigate to the client folder:**
 
-    ```sh
-    cd client
-    ```
+```bash
+cd client
+```
 
 3. **Install dependencies:**
 
-    ```sh
-    npm install
-    ```
+```bash
+npm install
+```
 
 4. **Start the client app:**
 
-    ```sh
-    npm start
-    ```
+```bash
+npm start
+```
 
 5. **Open a new terminal and navigate to the backend folder:**
 
-    ```sh
-    cd ../backend
-    ```
+```bash
+cd ../backend
+```
 
 6. **Install backend dependencies:**
 
-    ```sh
-    npm install
-    ```
+```bash
+npm install
+```
 
 7. **Start the backend server:**
 
-    ```sh
-    npm start
-    ```
+```bash
+npm start
+```
 
 8. **Access the application at [http://localhost:3000](http://localhost:3000) in your web browser.**
 
-### Stage One: Local Environment with Vagrant
+## Kubernetes Deployment
 
-1. **Navigate to the Stage_One directory:**
+### Step 1: Enable Kubernetes Engine API
 
-    ```sh
-    cd yolo/Stage_One
-    ```
+- Enable the Kubernetes Engine API:
+- [Enable Kubernetes Engine API](https://console.developers.google.com/apis/library/container.googleapis.com)
 
-2. **Start the Vagrant environment:**
+### Step 2: Create GKE Cluster
 
-    ```sh
-    vagrant up
-    ```
+- Create the GKE Cluster:
+```bash
+gcloud container clusters create yolo-cluster --num-nodes=3 --zone europe-west1-b
+```
 
-3. **Execute the Ansible playbook:**
+- Get Cluster Credentials:
+```bash
+gcloud container clusters get-credentials yolo-cluster --zone europe-west1-b
+```
 
-    ```sh
-    ansible-playbook -i inventory playbook.yml
-    ```
+### Step 3: Prepare Your Docker Images
 
-### Stage Two: Cloud Environment with Terraform and Ansible
+- Build and Push Docker Images:
+- Navigate to the backend directory and build the Docker image:
+```bash
+docker build -t gcr.io/dev05-yolo-425107/backend:latest .
+docker push gcr.io/dev05-yolo-425107/backend:latest
+```
 
-1. **Navigate to the Stage_Two/terraform directory:**
+- Navigate to the client directory and build the Docker image:
+```bash
+docker build -t gcr.io/dev05-yolo-425107/client:latest .
+docker push gcr.io/dev05-yolo-425107/client:latest
+```
 
-    ```sh
-    cd yolo/Stage_Two/terraform
-    ```
+### Step 4: Create Kubernetes Manifests
 
-2. **Initialize Terraform:**
+- Create Namespace:
+- Create a namespace.yaml file and apply the namespace:
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+name: yolo
+```
+```bash
+kubectl apply -f namespace.yaml
+```
 
-    ```sh
-    terraform init
-    ```
+- Create Persistent Volume and Persistent Volume Claim for MongoDB:
+- Create mongo-pv.yaml and mongo-pvc.yaml for Persistent Volume and Claim, respectively.
+- Apply the PV and PVC:
+```bash
+kubectl apply -f mongo-pv.yaml -n yolo
+kubectl apply -f mongo-pvc.yaml -n yolo
+```
 
-3. **Apply the Terraform configuration to provision AWS resources:**
+- Create StatefulSet for MongoDB:
+- Create mongo-statefulset.yaml for StatefulSet and apply it:
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+...
+```
+```bash
+kubectl apply -f mongo-statefulset.yaml -n yolo
+```
 
-    ```sh
-    terraform apply
-    ```
+- Create Deployments for Backend and Frontend:
+- Create backend-deployment.yaml and frontend-deployment.yaml for Deployments and apply them.
+- Example backend-deployment.yaml:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+...
+```
+```bash
+kubectl apply -f backend-deployment.yaml -n yolo
+```
 
-4. **Navigate to the Stage_Two/ansible directory:**
+- Create Services to Expose the Pods:
+- Create backend-service.yaml and frontend-service.yaml for Services and apply them.
+- Example backend-service.yaml:
+```yaml
+apiVersion: v1
+kind: Service
+...
+```
+```bash
+kubectl apply -f backend-service.yaml -n yolo
+```
 
-    ```sh
-    cd ../ansible
-    ```
+### Step 5: Verify the Deployment
 
-5. **Execute the Ansible playbook:**
+- Check the Status of the Pods:
+```bash
+kubectl get pods -n yolo
+```
 
-    ```sh
-    ansible-playbook -i inventory playbook.yml
-    ```
+- Get the External IPs:
+```bash
+kubectl get svc -n yolo
+```
+## Accessing the Application
+- Access the application externally via the IP address [35.195.61.146](http://35.195.61.146).
 
 ## Features
 
@@ -119,19 +172,28 @@ Make sure that you have the following installed:
 
 ## Usage
 
-- **Add a product:** Fill out the form with the product details and click "Add Product".
-- **View products:** See the list of products displayed on the homepage.
-- **Update a product:** Click on the "Edit" button next to a product and make changes in the form.
-- **Delete a product:** Click on the "Delete" button next to a product to remove it from the list.
+1. **Add a product:** Fill out the form with the product details and click "Add Product".
+2. **View products:** See the list of products displayed on the homepage.
+3. **Update a product:** Click on the "Edit" button next to a product and make changes in the form.
+4. **Delete a product:** Click on the "Delete" button next to a product to remove it from the list.
 
-**Note:** The price field only accepts numeric input.
+*Note: The price field only accepts numeric input.*
 
 ## Folder Structure
-- **client/:** Contains the frontend code.
-- **backend/:** Contains the backend code.
-- **Stage_One/:** Contains Ansible playbooks and roles for local environment setup.
-- **Stage_Two/:** Contains Terraform and Ansible configurations for cloud environment setup.
 
+- `client/`: Contains the frontend code.
+- `backend/`: Contains the backend code.
+- `Stage_One/`: Contains Ansible playbooks and roles for local environment setup.
+- `Stage_Two/`: Contains Terraform and Ansible configurations for cloud environment setup.
+- `kubernetes/`: Contains Kubernetes configuration files (manifests).
+- `backend-deployment.yaml`: Defines the Deployment resource for the backend application.
+- `backend-service.yaml`: Defines the Service resource to expose the backend application.
+- `client-deployment.yaml`: Defines the Deployment resource for the frontend application.
+- `client-service.yaml`: Defines the Service resource to expose the frontend application.
+- `mongo-pvc.yaml`: Defines the PersistentVolumeClaim resource for MongoDB.
+- `mongo-pv.yaml`: Defines the PersistentVolume resource for MongoDB.
+- `mongo-statefulset.yaml`: Defines the StatefulSet resource for MongoDB.
+- `namespace.yaml`: Defines the Namespace resource for the project.
 
 ## Contributing
 
