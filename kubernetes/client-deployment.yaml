@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: client
   namespace: yolo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: frontend
+      app: client
   template:
     metadata:
       labels:
-        app: frontend
+        app: client
     spec:
       containers:
-        - name: frontend
-          image: gcr.io/YOUR_PROJECT_ID/frontend:latest
+        - name: client
+          image: gcr.io/dev05-yolo-425107/client:latest
           ports:
             - containerPort: 3000
